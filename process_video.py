@@ -27,7 +27,7 @@ def process_video(video_source=0, output_path='output.mp4'):
         print("Error: Could not open video source")
         return
 
-    # Get video properties
+
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))

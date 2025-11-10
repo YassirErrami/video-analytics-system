@@ -11,3 +11,4 @@ model = YOLO('yolov8n.pt')  # This will auto-download first time (~6MB)
 
 print("Model loaded successfully!")
 print(f"Model can detect these classes: {model.names}")
+#plus
