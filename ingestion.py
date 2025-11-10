@@ -8,6 +8,8 @@ import redis
 import time
 from config import *
 from utils import create_frame_message
+from database import SessionLocal, StreamInfo
+from datetime import datetime
 
 
 class VideoIngestion:
@@ -37,6 +39,9 @@ class VideoIngestion:
             print("❌ Could not connect to Redis!")
             raise
 
+        # Register stream in database
+        self.register_stream()
+
         # Open video source
         self.cap = cv2.VideoCapture(video_source)
         if not self.cap.isOpened():
@@ -53,6 +58,31 @@ class VideoIngestion:
 
         # Calculate frame skip
         self.frame_skip = max(1, self.original_fps // PROCESSING_FPS)
+
+    def register_stream(self):
+        """Register stream in database"""
+        db = SessionLocal()
+        try:
+            # Check if stream exists
+            stream = db.query(StreamInfo).filter(StreamInfo.stream_id == self.stream_id).first()
+
+            if stream:
+                # Update existing stream
+                stream.status = "active"
+                stream.started_at = datetime.utcnow()
+            else:
+                # Create new stream
+                stream = StreamInfo(
+                    stream_id=self.stream_id,
+                    video_source=str(self.video_source),
+                    status="active"
+                )
+                db.add(stream)
+
+            db.commit()
+            print(f"✅ Stream registered in database: {self.stream_id}")
+        finally:
+            db.close()
 
     def start(self):
         """

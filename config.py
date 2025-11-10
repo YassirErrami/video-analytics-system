@@ -26,3 +26,10 @@ WORKER_TIMEOUT = 1  # Seconds to wait for new frames before checking again
 # Debug Settings
 DEBUG = True  # Print debug messages
 SHOW_PREVIEW = False  # Don't show video window in distributed mode
+
+# Database Configuration
+DATABASE_URL = "postgresql://postgres:password@localhost:5432/video_analytics"
+
+# API Configuration
+API_HOST = "0.0.0.0"
+API_PORT = 8000
